@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+	<head>	
+	<link rel="icon" href="tokb.png" type="image/jpg" sizes="16x16">
+		<title>S & L</title> 
+      <style>
+			#board{
+			  border: 4px solid gold;
+			}
+			#entire
+			{
+				position: absolute; top: 230px; left: 900px;
+				border-style:solid;
+				border-color:white;
+				border-width:5px;
+				padding:20px;
+				background-color:#F9C900;
+				width:350px;
+				height:150px;
+			}
+			.dice
+			{
+				position: relative; top: 5px; left: 143px;
+				width:55px;
+				font-size:24px;
+				text-align:center;
+			}
+
+			.b
+			{
+				position: relative; top: 18px; left: 125px;
+				color:yellow;
+				size:30px;
+				background-color:black;
+				border-color:yellow;
+				border-width:3px;
+				padding:15px;
+			}
+			h2{
+				position: relative; top: 3px; left: 118px;
+			}
+			#text
+			{
+				font-family: "Comic Sans MS", cursive, sans-serif;
+				text-decoration: overline solid gold;
+				position: absolute; top: 20px; left: 960px;
+			}
+		</style>	
+		<script>
+			let num;
+		    let startb=0;
+			let startr=0;
+			let turn=1;
+			let count=1;
+			let turn1=1;
+			let count1=1;
+			let player=1;
+			let sixb=0;
+			let sixr=0;
+			let winnerb=0;
+			let winnerr=0;
+			let restrictb=false;
+			let restrictr=false;
+			let lsnake=["737px","269px","581px","581px","191px","425px","659px","113px","269px","425px"];
+			let tsnake=["755px","675px","595px","275px","275px","195px","115px","115px","35px","35px"];
+			let lchange=["425px","191px","425px","659px","35px","581px","113px","35px","581px","191px"];
+			let tchange=["755px","755px","675px","435px","595px","515px","675px","195px","115px","355px"];
+			let turnb=[1,1,0,1,1,0,0,0,1,0];
+			let loser=[4,14,13,19,42,42,70,2,9,37];
+			let lladder=["581px","737px","347px","425px","191px","35px","737px","191px","737px"];
+			let tladder=["755px","675px","675px","595px","515px","435px","435px","195px","115px"];
+			let lclimb=["503px","659px","347px","503px","347px","113px","659px","113px","659px"];
+			let tclimb=["675px","515px","515px","115px","355px","275px","195px","35px","35px"];
+			let turnr=[0,0,0,1,0,1,0,0,0];
+			let winner=[6,21,20,61,18,21,22,21,2];
+			function check()
+			{
+				let topposb=imgb.style.top;
+				topposb=parseInt(topposb);
+				let leftposb=imgb.style.left;
+				leftposb=parseInt(leftposb);
+				let topposr=imgr.style.top;
+				topposr=parseInt(topposr);
+				let leftposr=imgr.style.left;
+				leftposr=parseInt(leftposr);
+				if((num==6)&& (player==1)&&(startb!=0) )
+				{
+					sixb++;
+				}
+				else if((num==6) && (player==2) &&(startr!=0))
+				{
+					sixr++;
+				}
+				if(sixb>0 && num!=6)
+				{
+					num=num+(6*sixb);
+					sixb=0;
+				}
+				else if(sixr>0 && num!=6)
+				{
+					num=num+(6*sixr);
+					sixr=0;
+				}
+				if(((winnerb+num)>100)&&(player==1))
+				{
+					restrictb=true;
+				}
+				else if(((winnerr+num)>100)&&(player==2))
+				{
+					restrictr=true;
+				}
+				else if(((winnerb+num)==100) && (player==1))
+				{
+						window.location.href = "win.html";
+						restrictb=false;
+						restrictr=true;
+				}
+				else if(((winnerr+num)==100) && (player==2))
+				{
+						window.location.href = "winr.html";
+						restrictr=false;
+						restrictb=true;
+				}
+				else{
+					restrictb=false;
+					restrictr=false;
+				}
+				if((startb==0)&& (num==6) && (player==1) && (sixr==0))
+				{
+					imgb.style.top="755px";
+					imgb.style.left="35px";
+					startb=1;
+					winnerb=1;
+				}
+				else if((startb==1) && player==1 && restrictb==false && (sixb==0))
+				{
+					for(let i=0;i<num;i++)
+					{
+						winnerb++;
+						if(leftposb==737 && turn==1)
+						{
+							imgb.style.top=(topposb-80)+"px";
+							topposb=topposb-80;
+							turn=0;
+						}
+						else if(leftposb==35 && turn==0)
+						{
+							imgb.style.top=(topposb-80)+"px";
+							topposb=topposb-80;
+							turn=1;
+						}
+						else if(turn==0)
+						{
+							imgb.style.left=(leftposb-78)+"px";
+							leftposb=leftposb-78;
+						}
+						else if(turn==1)
+						{
+							imgb.style.left=(leftposb+78)+"px";
+							leftposb=leftposb+78;
+						}
+					}
+					setTimeout(ladderSnakeb, 500);
+				}
+				if((startr==0)&& (num=="6") && (player==2)&& (sixb==0))
+				{
+					imgr.style.top="755px";
+					imgr.style.left="35px";
+					startr=1;
+					winnerr=1;
+					
+				}
+				else if((startr==1)&& (player==2) && (restrictr==false)&& (sixr==0))
+				{
+					for(let i=0;i<num;i++)
+					{
+						winnerr++;
+						if(leftposr==737 && turn1==1)
+						{
+							imgr.style.top=(topposr-80)+"px";
+							topposr=topposr-80;
+							turn1=0;
+						}
+						else if(leftposr==35 && turn1==0)
+						{
+							imgr.style.top=(topposr-80)+"px";
+							topposr=topposr-80;
+							turn1=1;
+						}
+						else if(turn1==0)
+						{
+							imgr.style.left=(leftposr-78)+"px";
+							leftposr=leftposr-78;
+						}
+						else if(turn1==1)
+						{
+							imgr.style.left=(leftposr+78)+"px";
+							leftposr=leftposr+78;
+						}
+					}
+					setTimeout(ladderSnaker, 500);
+					
+				}
+				if((num!=6)&& (player==1))
+				{
+					player=2;
+					sixb=0;
+				}
+				else if((num!=6) && (player==2))
+				{
+					player=1;
+					sixr=0;
+				}
+				
+			}
+			function ladderSnakeb()
+			{
+				for(let i=0;i<lsnake.length;i++)
+				{
+					if((imgb.style.left==lsnake[i])&&(imgb.style.top==tsnake[i]))
+					{
+						imgb.style.left=lchange[i];
+						imgb.style.top=tchange[i];
+						leftposb=parseInt(lchange[i]);
+						topposb=parseInt(tchange[i]);
+						turn=turnb[i];
+						winnerb=winnerb-loser[i];
+					}
+				}
+				for(let i=0;i<lladder.length;i++)
+				{
+					if((imgb.style.left==lladder[i])&&(imgb.style.top==tladder[i]))
+					{
+						imgb.style.left=lclimb[i];
+						imgb.style.top=tclimb[i];
+						leftposb=parseInt(lclimb[i]);
+						topposb=parseInt(tclimb[i]);
+						turn=turnr[i];
+						winnerb=winnerb+winner[i];
+					}
+				}
+			}
+			function ladderSnaker()
+			{
+				for(let i=0;i<lsnake.length;i++)
+				{
+					if((imgr.style.left==lsnake[i])&&(imgr.style.top==tsnake[i]))
+					{
+						imgr.style.left=lchange[i];
+						imgr.style.top=tchange[i];
+						leftposr=parseInt(lchange[i]);
+						topposr=parseInt(tchange[i]);
+						turn1=turnb[i];
+						winnerr=winnerr-loser[i];
+					}
+				}
+				for(let i=0;i<lladder.length;i++)
+				{
+					if((imgr.style.left==lladder[i])&&(imgr.style.top==tladder[i]))
+					{
+						imgr.style.left=lclimb[i];
+						imgr.style.top=tclimb[i];
+						leftposr=parseInt(lclimb[i]);
+						topposr=parseInt(tclimb[i]);
+						turn1=turnr[i];
+						winnerr=winnerr+winner[i];
+					}
+				}
+			}
+			function rollDice()
+			{
+				let status=document.getElementById("status");
+				num=Math.floor(Math.random()*6)+1;
+				if(num==1)
+					image.src="1.png";
+				else if(num==2)
+					image.src="2.png";
+				else if(num==3)
+					image.src="3.png";
+				else if(num==4)
+					image.src="4.png";
+				else if(num==5)
+					image.src="5.png";
+				else if(num==6)
+					image.src="6.png";
+				status.innerHTML="You rolled "+num+".";
+				if(player==2)
+				{
+					entire.style.borderColor="red";
+				}
+				else if(player==1)
+				{
+					entire.style.borderColor="blue";
+				}
+				check();
+			}
+		</script>
+		
+	</head>
+	<body style="background-color:#EEE8AA;">
+		<img id="imgb" src="tokb.png" alt="no tokken" height="58" width="58"  style="position: absolute; top: 450px; left: 1130px;">
+		<img id="imgr" src="tokr.png" alt="no tokken" height="58" width="58"  style="position: absolute; top: 450px; left: 1030px;">
+		<img id="board" src="board.jpg" alt="no board" width="60.2%" height="820" >
+		<div id="text"><h1>Snake and Ladder</h1></div>
+		<div id="entire">
+			<div class="dice"><img src="6.png" alt="No image"  width="55px" height="50px" id="image">
+			</div>
+			<button onclick="rollDice()" class="b" ><b>Roll Dice</b></button>
+			<h2 id="status" style="clear:left;"></h2>
+		</div>
+	</body>
+</html>
